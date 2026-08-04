@@ -33,9 +33,9 @@ def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:
         for j in range(1, M):
             stock_prices[i, j] = u * stock_prices[i - 1, j - 1]
 
-    if opt_type == "call":
+    if opt_type.lower() == "call":
         expir = stock_prices[-1, :] - K
-    elif opt_type == "put":
+    elif opt_type.lower() == "put":
         expir = K - stock_prices[-1, :]
 
     expir = np.where(expir >= 0, expir, 0)
@@ -48,9 +48,9 @@ def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:
             continuation = np.exp(-r * delta_t) * ((1 -p) * opt_prices[i + 1, j] + p * opt_prices[i +1 , j + 1])
 
             if opt_style.lower() == "american":
-                if opt_type == "call":
+                if opt_type.lower() == "call":
                     exercise = max(stock_prices[i, j] - K, 0)
-                elif opt_type == "put":
+                elif opt_type.lower() == "put":
                     exercise = max(K - stock_prices[i, j], 0)
                 opt_prices[i, j] = max(continuation, exercise)
             elif opt_style.lower() == "european":
