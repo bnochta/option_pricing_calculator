@@ -56,6 +56,10 @@ def surrounding_lower(option_tenor, FRED_SERIES):
         for series_id, tenor in FRED_SERIES.items()
         if tenor <= option_tenor
     }
+    if len(smaller_tenors) == 0:
+        lower_id = min(FRED_SERIES, key=FRED_SERIES.get)
+        return lower_id
+
     lower_id = max(smaller_tenors, key=smaller_tenors.get)
     return lower_id
 
@@ -71,7 +75,7 @@ def surrounding_upper(option_tenor, FRED_SERIES):
 
 def fred_rf_rate(val_date: str, lower_id: str, upper_id: str):
     val_date_obj = pd.to_datetime(val_date)
-    obs_start = val_date_obj - pd.Timedelta(days=0)
+    obs_start = val_date_obj - pd.Timedelta(days=14)
 
     lower_series = fred.get_series(lower_id, observation_end=val_date_obj, observation_start=obs_start)
     upper_series = fred.get_series(upper_id, observation_end=val_date_obj, observation_start=obs_start)
@@ -84,7 +88,7 @@ def fred_rf_rate(val_date: str, lower_id: str, upper_id: str):
 
 
 def interpolated_rate(data: pd.DataFrame, opt_tenor: str, surr_low: str, surr_up: str):
-    latest_row = data.iloc[-1]
+    latest_row = data.dropna().iloc[-1]
 
     lower_rate = latest_row[surr_low] / 100
     upper_rate = latest_row[surr_up] / 100
