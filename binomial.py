@@ -15,7 +15,7 @@ def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:
     S0 = S
     K = K
     t = T
-    delta_t = t / N
+    delta_t = t / n
     sigma = vol
     u = np.exp(sigma * np.sqrt(delta_t))
     d = 1 / u
