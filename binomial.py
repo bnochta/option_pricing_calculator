@@ -9,7 +9,7 @@ import hist_volatility
 from riskfree_and_spot import *
 from hist_volatility import *
 
-def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:float, vol:float):
+def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:float, vol:float, q=0.0):
     N = n + 1
 
     S0 = S
@@ -20,7 +20,7 @@ def get_binomial(opt_style:str,opt_type:str,n:int, S:float, K:float, T:float, r:
     u = np.exp(sigma * np.sqrt(delta_t))
     d = 1 / u
     r = r
-    p = (np.exp(r * delta_t) - d) / (u - d)
+    p = (np.exp((r - q) * delta_t) - d) / (u - d)
 
     stock_prices = np.zeros( (N, N) )
     opt_prices = np.zeros( (N, N) )
